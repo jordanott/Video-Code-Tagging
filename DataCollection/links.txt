@@ -1,1 +1,3 @@
-# links for videos go in here
+link1 | name1 | cs1-ce1 | ns1-ne1
+link2 | name2 | cs1-ce1 | ns1-ne1
+link3 | name3 | cs1-ce1 | ns1-ne1
