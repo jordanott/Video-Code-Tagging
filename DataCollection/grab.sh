@@ -9,13 +9,30 @@ do
     url=${line[0]}
     name=${line[1]}
   done <<< "$var"
-  mkdir Downloads/$name
   # download video
-  pytube -e mp4 -p Downloads/$name/ -f $name -r 720p $url
+  {
+    path=Downloads/$name"_720"
+    mkdir $path
+    pytube -e mp4 -p $path/ -f $name -r 720p $url
+  }||
+  {
+    rm -rf $path
+    path=Downloads/$name"_480"
+    mkdir $path
+    pytube -e mp4 -p $path/ -f $name -r 480p $url
+  }||
+  {
+    rm -rf $path
+    path=Downloads/$name"_360"
+    mkdir $path
+    pytube -e mp4 -p Downloads/$name"_360"/ -f $name -r 360p $url
+  }||
+  {
+    rm -rf $path
+    echo $url >> error.txt 
+  }
   # location of mp4 file
-  video=Downloads/$name/$name.mp4
-  # output directory for images
-  output=Downloads/$name
+  video=$path/$name.mp4
   # split videos 1 frame per second
-  ffmpeg -i $video -r 1 -f image2 $output/image-%07d.png -nostdin
+  ffmpeg -i $video -r 1 -f image2 $path/image-%07d.png -nostdin
 done < "$input"
