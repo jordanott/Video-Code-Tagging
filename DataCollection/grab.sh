@@ -29,10 +29,10 @@ do
   }||
   {
     rm -rf $path
-    echo $url >> error.txt 
+    echo $url >> error.txt
   }
   # location of mp4 file
   video=$path/$name.mp4
   # split videos 1 frame per second
-  ffmpeg -i $video -r 1 -f image2 $path/image-%07d.png -nostdin
+  ffmpeg -i $video -r 1 -f image2 $path/%d.png -nostdin
 done < "$input"
