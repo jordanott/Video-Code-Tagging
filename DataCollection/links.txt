@@ -1,4 +1,2 @@
-https://www.youtube.com/watch?v=3u1fu6f8Hto&t=4706s | Java Tutorial for Beginners - Original Step by Step | 12:27-15:05 | 0:00-12:25, 15:06-15:10
-https://www.youtube.com/watch?v=5u8rFbpdvds | name1 | 0:00-0:30,0:45-1:00 | 0:46-0:59
-https://www.youtube.com/watch?v=ldk2pLyVZ4c | name2 | cs1-ce1 | ns1-ne1
-link3 | name3 | cs1-ce1 | ns1-ne1
+Java Tutorial for Beginners - Original Step by Step, 1:27:24, https://www.youtube.com/watch?v=3u1fu6f8Hto&t=4706s
+...
