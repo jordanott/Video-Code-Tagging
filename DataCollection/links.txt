@@ -1,2 +1,33 @@
-Java Tutorial for Beginners - Original Step by Step, 1:27:24, https://www.youtube.com/watch?v=3u1fu6f8Hto&t=4706s
-...
+https://www.youtube.com/watch?v=J4HSkPEniSE | OOP Concepts Java Tutorial For Beginners
+https://www.youtube.com/watch?v=M8dSGNn36TA | Java Tutorial # 11 static, final Modifiers in Java Non Access Modifiers in Java9s
+https://www.youtube.com/watch?v=BHqk_vf1JJY | Core Java Tutorial For Beginners in Hindi
+https://www.youtube.com/watch?v=AmhdBLwrCOk | Java Development on Mac (Xcode) [Tutorial]
+https://www.youtube.com/watch?v=1wJfIUcVWlA | Java Beginner Tutorial 9 - What is Object Oriented Programming (OOPs) with examples
+https://www.youtube.com/watch?v=fpuWkZs51aM&index=3&list=PL27BCE863B6A864E3 | Intermediate Java Tutorial - 3 - Recursion
+https://www.youtube.com/watch?v=GvTZ2Huo0T4 | Java Tutorial 11: GUI in Java, JFrame, JPanel, JButton, JLabel
+https://www.youtube.com/watch?v=kD8HoWIeHIA | Learn to Code in Java: Ep2: Input and Output
+https://www.youtube.com/watch?v=TZss5ukwN8s | Hand Tracing - Intro to Java Programming
+https://www.youtube.com/watch?v=nTdTBs6jk98 | 5 Must-Have Atom Packages in under 3 Minutes
+https://www.youtube.com/watch?v=1gir2R7G9ws | Java Programming: Let's Build a Game #1
+https://www.youtube.com/watch?v=YUBfgCJRlSs | Java pt.1
+https://www.youtube.com/watch?v=c0efB_CKOYo | Running IntelliJ IDEA for the First Time
+https://www.youtube.com/watch?v=uUzRMOCBorg | Using Git in IntelliJ
+https://www.youtube.com/watch?v=l-fFZnTUpG4 | Introduction to Feature Branching using IntelliJ IDEA and git
+https://www.youtube.com/watch?v=_JxRf67jXno | how to make and execute a java program using notepad and cmd
+https://www.youtube.com/watch?v=a8RUmnPL8aQ | "Chat Bot" Java Tutorial
+https://www.youtube.com/watch?v=0e3PuiTd20Q | Chatbot (Artificial Intelligence project ) by Javafx
+https://www.youtube.com/watch?v=I3usNR8JrEE | Java Tutorial 44 (GUI) - Simple Animation
+https://www.youtube.com/watch?v=D6jqjNbKJJk | Operatoren Teil 1 - Java Tutorial 5
+https://www.youtube.com/watch?v=jMauEVTNI1Y | Speed Coding: Pong in C++ AND Java Which is Better?
+https://www.youtube.com/watch?v=MjqcJvRiooM | Java Tutorial For Beginners #2 - Constructors and Methods
+https://www.youtube.com/watch?v=H4GhGmlcPJ8 | Java basics: a tutorial for beginners
+https://www.youtube.com/watch?v=7CJCMKNoICE | Java Tutorial - JVM verbose GC analysis
+https://www.youtube.com/watch?v=p5O0eQgTDyI | NetBeans Java Tutorial - User Input #2
+https://www.youtube.com/watch?v=SRJZ1XmqHfA | Arrays - Java Tutorial 10
+https://www.youtube.com/watch?v=O397QLF4Ub0 | Basic guide for Class Objects and Methods in Java for Selenium Webdriver
+https://www.youtube.com/watch?v=WnB0JoOZpB4 | Exercise 1 Week 3 - Java Tutorial Multiple Strings While Loop
+https://www.youtube.com/watch?v=8k3EZ9j2wMA | Microsoft Word 2010 - User Guide - Lesson Two - Copy and Paste, Fonts and Paragraphs
+https://www.youtube.com/watch?v=fZclFtagPic | How to write a resume CV with Microsoft Word
+https://www.youtube.com/watch?v=3bU2NrhVnf8 | How to Use Notepad in Windows 10 8.1 7 XP - Full Tutorial
+https://www.youtube.com/watch?v=_JFIeY46sIU | Sublime Text Line and Indentation Tools (Tutorial #2)
+https://www.youtube.com/watch?v=O1_zgmUINi8 | Microsoft Office 2016 Beginners Tutorial - Office 2016 New Features
