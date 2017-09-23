@@ -18,7 +18,7 @@ do
   {
     rm -rf "$path"
     path=Downloads/$name"_480"
-    mkdir $path
+    mkdir "$path"
     pytube -e mp4 -p "$path"/ -f "$name" -r 480p $url
   }||
   {
