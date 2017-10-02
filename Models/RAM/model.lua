@@ -13,9 +13,9 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Train a Recurrent Model for Visual Attention')
 cmd:text('Example:')
-cmd:text('$> th rnn-visual-attention.lua > results.txt')
+cmd:text('$> th model.lua > results.txt')
 cmd:text('Options:')
-cmd:option('--xpPath', '/path/to/saved_model.dat', 'path to a previously saved model')
+cmd:option('--xpPath', '', 'path to a previously saved model')
 cmd:option('--learningRate', 0.01, 'learning rate at t=0')
 cmd:option('--minLR', 0.00001, 'minimum learning rate')
 cmd:option('--saturateEpoch', 800, 'epoch at which linear decayed LR will reach minLR')
@@ -256,4 +256,3 @@ if checksum then
    assert(math.abs(xp:model():parameters()[1]:sum() - checksum) < 0.0001, "Loaded model parameters were changed???")
 end
 xp:run(ds)
-
