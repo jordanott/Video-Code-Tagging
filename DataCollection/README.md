@@ -4,7 +4,13 @@ We are interested in YouTube videos containing code tutorials. We need videos sp
 
 I have taken care of automating the video download process and splitting the videos into images.
 
-#### links.txt should be in the following format
+### Requirements ###  
+Gather data using [PyTube](https://github.com/nficano/pytube)
+```
+pip install pytube
+sudo apt-get install ffmpeg
+```
+###### links.txt Format ######
 Link | Video Name
 
 #### To Run ####

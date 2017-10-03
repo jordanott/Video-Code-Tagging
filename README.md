@@ -1,13 +1,17 @@
 # Video Code Tagging
 
-Gather data using [PyTube](https://github.com/nficano/pytube)
-```
-pip install pytube
-pytube -e mp4 -p ~/Downloads/ <URL> -r <RESOLUTION>
-```
-
-CNN Model
-
-Training
-
-
+.  
+├── [DataCollection](DataCollection)  
+│   ├── grab.sh  
+│   ├── links.txt  
+│   └── README.md  
+├── git_prep.sh  
+├── [Models](Models)  
+│   ├── [CNN](Models/CNN)  
+│   │   ├── model.py  
+│   │   └── README.md  
+│   └── [RAM](Models/RAM)  
+│       ├── model.lua  
+│       └── README.md  
+├── README.md  
+└── run.py  
