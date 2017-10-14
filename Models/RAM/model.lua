@@ -97,7 +97,7 @@ else
    locationSensor:add(nn.SelectTable(2))
    locationSensor:add(nn.Linear(2, opt.locatorHiddenSize))
    locationSensor:add(nn[opt.transfer]())
-
+   
    glimpseSensor = nn.Sequential()
    glimpseSensor:add(nn.SpatialGlimpse(opt.glimpsePatchSize, opt.glimpseDepth, opt.glimpseScale):float())
    glimpseSensor:add(nn.Collapse(3))
