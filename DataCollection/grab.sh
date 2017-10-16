@@ -1,7 +1,7 @@
 #!/bin/bash
 # grab all links in links.txt
 mkdir Downloads
-input="links.txt"
+input="DataCollection/links.txt"
 while IFS= read -r var
 do
   while IFS=' | ' read -ra line
