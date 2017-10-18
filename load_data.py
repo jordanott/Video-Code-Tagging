@@ -1,9 +1,16 @@
 import os
+import random
 import numpy as np
 from scipy import misc
 import matplotlib.pyplot as plt
 
-def load_data():
+def shuffle(x,y):
+    c = list(zip(x, y))
+    random.shuffle(c)
+    a, b = zip(*c)
+    return np.array(a),np.array(b)
+
+def load_data(split=.8):
     DATA_DIR = '../Data/'
     labels_file = open(DATA_DIR+'labels.txt')
     images = np.empty((10,200,200,3),dtype='uint8')
@@ -16,9 +23,10 @@ def load_data():
         img = misc.imread(complete_location)
         images[i] = img
         i += 1
-    return images, labels
 
-i,j = load_data()
+    images,labels = shuffle(images,labels)
+    split_index = len(images*split)
+    x_train,x_test = images[:split_index],images[split_index:]
+    y_train,y_test = labels[:split_index],labels[split_index:]
 
-plt.imshow(i[1])
-plt.show()
+    return x_train,y_train,x_test,y_test
