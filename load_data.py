@@ -1,4 +1,5 @@
 import os
+import json
 import random
 import numpy as np
 from scipy import misc
@@ -11,18 +12,39 @@ def shuffle(x,y):
     return np.array(a),np.array(b)
 
 def load_data(split=.8):
-    DATA_DIR = '../Data/'
-    labels_file = open(DATA_DIR+'labels.txt')
-    images = np.empty((10,200,200,3),dtype='uint8')
+    DATA_DIR = '../Data'
+    labels_json = json.load(open(DATA_DIR+'/datacleaned.json'))
+    images = np.array([],dtype='uint8')
     labels = []
     i = 0
-    for entry in labels_file:
-        file_location,w,x,y,z = entry.split(',')
-        labels.append(np.array([int(w),int(x),int(y),int(z)]))
-        complete_location = DATA_DIR+file_location.replace('.png','_resized.png')
-        img = misc.imread(complete_location)
-        images[i] = img
-        i += 1
+    for i in range(len(labels_json)):
+        file_location = str(labels_json[i]['fileName'])
+        entry_labels = [labels_json[i]['isCodeCount'],labels_json[i]['isPartiallyCodeCount'],
+            labels_json[i]['isHandWrittenCount'],labels_json[i]['isNotCodeCount']]
+        index = np.argmax(np.array(entry_labels))
+        max_value = np.amax(np.array(entry_labels))
+        LOAD = False
+        if max_value > 0:
+            # the image contains code
+            if index == 0:
+                labels.append(np.array([1,0]))
+                LOAD = True
+            # the image has partially visible code
+            elif index == 1:
+                pass
+            # the image has hand written code
+            elif index == 2:
+                pass
+            # the image does not contain code
+            elif index == 3:
+                labels.append(np.array([0,1]))
+                LOAD = True
+            else:
+                pass
+        if LOAD:
+            complete_location = DATA_DIR+file_location.replace('.png','_resized.png')
+            img = misc.imread(complete_location)
+            np.concatenate((images,img),axis=0)
 
     images,labels = shuffle(images,labels)
     split_index = len(images*split)
