@@ -3,6 +3,7 @@ import json
 import random
 import numpy as np
 from scipy import misc
+from PIL import Image
 import matplotlib.pyplot as plt
 
 def shuffle(x,y):
@@ -14,7 +15,7 @@ def shuffle(x,y):
 def load_data(split=.8):
     DATA_DIR = '../Data'
     labels_json = json.load(open(DATA_DIR+'/datacleaned.json'))
-    images = np.array([],dtype='uint8')
+    images = []#np.array([],dtype='uint8')
     labels = []
     i = 0
     for i in range(len(labels_json)):
@@ -43,11 +44,15 @@ def load_data(split=.8):
                 pass
         if LOAD:
             complete_location = DATA_DIR+file_location.replace('.png','_resized.png')
-            img = misc.imread(complete_location)
-            np.concatenate((images,img),axis=0)
-
+            #img = misc.imread(complete_location)
+            img = Image.open(complete_location)
+            if img.mode != 'RGB':
+               img = img.convert('RGB')
+            img = np.asarray(img)
+            images.append(img)#np.concatenate((images,img),axis=0)
+    images = np.array(images)
     images,labels = shuffle(images,labels)
-    split_index = len(images*split)
+    split_index = int(len(images)*split)
     x_train,x_test = images[:split_index],images[split_index:]
     y_train,y_test = labels[:split_index],labels[split_index:]
 
