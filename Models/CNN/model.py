@@ -25,7 +25,7 @@ def Inception(input_shape,num_classes):
         layer.trainable = False
 
     # compile the model (should be done *after* setting layers to non-trainable)
-    model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+    model.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])
 
     # train the model on the new data for a few epochs
     #model.fit_generator(...)
@@ -45,7 +45,7 @@ def Inception(input_shape,num_classes):
        layer.trainable = False
     for layer in model.layers[249:]:
        layer.trainable = True
-
+    
     model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
     '''
     return model
