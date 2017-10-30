@@ -36,8 +36,6 @@ def Inception(input_shape,num_classes):
 
     # let's visualize layer names and layer indices to see how many layers
     # we should freeze:
-    for i, layer in enumerate(base_model.layers):
-       print(i, layer.name)
     '''
     # we chose to train the top 2 inception blocks, i.e. we will freeze
     # the first 249 layers and unfreeze the rest:
@@ -45,7 +43,7 @@ def Inception(input_shape,num_classes):
        layer.trainable = False
     for layer in model.layers[249:]:
        layer.trainable = True
-    
+
     model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
     '''
     return model
