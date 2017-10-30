@@ -10,12 +10,13 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--load',action="store_true")
+parser.add_argument('--show',action="store_true")
 parser.add_argument('--train',action="store_true")
 args = parser.parse_args()
 # visualize the images and choices
 LOAD = args.load
 TRAIN = args.train
-
+VISUALIZE = args.show
 
 batch_size = 32
 epochs = 5
@@ -49,9 +50,18 @@ if TRAIN:
 		callbacks=[tb,es,w])
 elif LOAD:
 	model.load_weights('code_tagger_weights.h5')
-
+	print 'Code samples:',np.sum(y_test[:,0])
+	print 'No C samples:',np.sum(y_test[:,1])
+	correct = 0
 	for i in range(len(x_test)):
-		print model.predict(x_test[i])
-		print y_test[i]
-		plt.imshow(x_test[i])
-		plt.show()
+		prediction = np.argmax(model.predict(x_test[i].reshape(1,300,300,3)))
+		actual = np.argmax(y_test[i])
+		if prediction == actual:
+			correct += 1
+		if VISUALIZE:
+			print prediction
+			print actual
+			plt.imshow(x_test[i])
+			plt.show()
+
+	print 'Accuracy:',correct/len(x_test)
