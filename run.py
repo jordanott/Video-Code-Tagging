@@ -22,9 +22,8 @@ VISUALIZE = args.show
 LEAVE_ONE_OUT = args.leave_one_out
 
 batch_size = 32
-epochs = 5
-PATIENCE = 2
-
+epochs = 500
+PATIENCE = 20
 
 if TRAIN:
 	if LEAVE_ONE_OUT:
@@ -36,8 +35,8 @@ if TRAIN:
 		for directory in videos:
 			count += 1
 			x_train,y_train,x_test,y_test = load_data_leave_one_out(directory)
-			log.write(str(count)+','+directory+',Code:'+str(np.sum(y_train[:,0]))+',No C:'+str(np.sum(y_train[:,1]))+
-				',Train:'+str(len(x_train))+',Test:'+str(len(x_test)))
+			log.write(str(count)+','+directory+',Train C/NC:'+str(np.sum(y_train[:,0]))+'/'+str(np.sum(y_train[:,1]))+
+				',Test C/NC:'+str(np.sum(y_test[:,0]))+'/'+str(np.sum(y_test[:,1])))
 			# load pretrained network
 			model = Inception((300,300,3),2)
 			# data augmentation
@@ -55,12 +54,11 @@ if TRAIN:
 			history = model.fit_generator(datagen.flow(x_train, y_train,
 				batch_size=batch_size),
 				steps_per_epoch=x_train.shape[0] // batch_size,
-				epochs=1,
+				epochs=epochs,
 				validation_data=(x_test, y_test),
 				callbacks=[tb,es,w])
 
-			log.write(',Max val acc:'+str(max(history.history['val_acc']))+'\n')
-
+			log.write(',ValAcc:'+"{0:.2f}".fromat(100*max(history.history['val_acc']))+'\n')
 
 	else:
 		# load data
