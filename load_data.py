@@ -12,12 +12,56 @@ def shuffle(x,y):
     a, b = zip(*c)
     return np.array(a),np.array(b)
 
+def load_data_leave_one_out(directory):
+    DATA_DIR = '../Data'
+    labels_json = json.load(open('datacleaned.json'))
+    x_train,x_test,y_train,y_test = [],[],[],[]
+    i = 0
+    for i in range(len(labels_json)):
+        file_location = str(labels_json[i]['fileName'])
+        entry_labels = [labels_json[i]['isCodeCount'],labels_json[i]['isPartiallyCodeCount'],
+            labels_json[i]['isHandWrittenCount'],labels_json[i]['isNotCodeCount']]
+        index = np.argmax(np.array(entry_labels))
+        max_value = np.amax(np.array(entry_labels))
+        LOAD = False
+        if max_value > 0:
+            # the image contains code
+            if index == 0:
+                label = np.array([1,0])
+                LOAD = True
+            # the image has partially visible code
+            elif index == 1:
+                pass
+            # the image has hand written code
+            elif index == 2:
+                pass
+            # the image does not contain code
+            elif index == 3:
+                label = np.array([0,1])
+                LOAD = True
+            else:
+                pass
+        if LOAD:
+            complete_location = DATA_DIR+file_location.replace('.png','_resized.png')
+            img = Image.open(complete_location)
+            if img.mode != 'RGB':
+               img = img.convert('RGB')
+            img = np.asarray(img)
+            if directory in complete_location:
+                x_test.append(img)
+                y_test.append(label)
+            else:
+                x_train.append(img)
+                y_train.append(label)
+
+    return np.array(x_train),np.array(y_train),np.array(x_test),np.array(y_test)
+
+
 def load_data(split=.8):
     DATA_DIR = '../Data'
-    labels_json = json.load(open(DATA_DIR+'/datacleaned.json'))
-    images = []#np.array([],dtype='uint8')
+    labels_json = json.load(open('datacleaned.json'))
+    images = []
     labels = []
-    i = 0
     for i in range(len(labels_json)):
         file_location = str(labels_json[i]['fileName'])
         entry_labels = [labels_json[i]['isCodeCount'],labels_json[i]['isPartiallyCodeCount'],
@@ -44,12 +88,11 @@ def load_data(split=.8):
                 pass
         if LOAD:
             complete_location = DATA_DIR+file_location.replace('.png','_resized.png')
-            #img = misc.imread(complete_location)
             img = Image.open(complete_location)
             if img.mode != 'RGB':
                img = img.convert('RGB')
             img = np.asarray(img)
-            images.append(img)#np.concatenate((images,img),axis=0)
+            images.append(img)
     images = np.array(images)
     images,labels = shuffle(images,labels)
     split_index = int(len(images)*split)
