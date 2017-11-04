@@ -57,7 +57,7 @@ def load_data_leave_one_out(directory):
     return np.array(x_train),np.array(y_train),np.array(x_test),np.array(y_test)
 
 
-def load_data(split=.8):
+def load_data(split=.8,seed=0):
     DATA_DIR = '../Data'
     labels_json = json.load(open('datacleaned.json'))
     images = []
@@ -93,10 +93,21 @@ def load_data(split=.8):
                img = img.convert('RGB')
             img = np.asarray(img)
             images.append(img)
+    random.seed(seed)
     images = np.array(images)
     images,labels = shuffle(images,labels)
     split_index = int(len(images)*split)
     x_train,x_test = images[:split_index],images[split_index:]
     y_train,y_test = labels[:split_index],labels[split_index:]
+
+    count = 0
+    for i in range(len(x_train)):
+        for j in range(len(x_test)):
+            dist = np.linalg.norm(x_train[i]-x_test[j])
+            if dist == 0:
+                np.delete(x_test,j,0)
+                np.delete(y_test,j,0)
+                count += 1
+    print 'Deleted:',count
 
     return x_train,y_train,x_test,y_test
