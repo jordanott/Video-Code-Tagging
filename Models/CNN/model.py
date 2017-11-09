@@ -51,33 +51,3 @@ def VGG(input_shape,num_classes):
     # compile the model (should be done *after* setting layers to non-trainable)
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])
     return model
-
-def get_output_layer(model, layer_name):
-    # get the symbolic outputs of each "key" layer (we gave them unique names).
-    layer_dict = dict([(layer.name, layer) for layer in model.layers])
-    layer = layer_dict[layer_name]
-    return layer
-
-def visualize_class_activation_map(model, img, output_path):
-    # TODO: fix and test
-    import cv2
-    width, height, _ = original_img.shape
-
-    #Get the 512 input weights to the softmax.
-    class_weights = model.layers[-1].get_weights()[0]
-    final_conv_layer = get_output_layer(model, "block5_conv3")
-    get_output = K.function([model.layers[0].input], [final_conv_layer.output, model.layers[-1].output])
-    [conv_outputs, predictions] = get_output([img])
-    conv_outputs = conv_outputs[0, :, :, :]
-
-    #Create the class activation map.
-    cam = np.zeros(dtype = np.float32, shape = conv_outputs.shape[1:3])
-    for i, w in enumerate(class_weights[:, 1]):
-            cam += w * conv_outputs[i, :, :]
-    print "predictions", predictions
-    cam /= np.max(cam)
-    cam = cv2.resize(cam, (height, width))
-    heatmap = cv2.applyColorMap(np.uint8(255*cam), cv2.COLORMAP_JET)
-    heatmap[np.where(cam < 0.2)] = 0
-    img = heatmap*0.5 + original_img
-    cv2.imwrite(output_path, img)
