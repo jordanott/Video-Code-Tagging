@@ -6,7 +6,7 @@ import numpy as np
 import argparse
 import sys
 sys.path.append('Models/CNN/')
-from model import Inception
+from model import Inception,VGG
 import os
 
 parser = argparse.ArgumentParser()
@@ -58,14 +58,14 @@ if TRAIN:
 				validation_data=(x_test, y_test),
 				callbacks=[tb,es,w])
 
-			log.write(',ValAcc:'+"{0:.2f}".fromat(100*max(history.history['val_acc']))+'\n')
+			log.write(',ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
 
 	else:
 		# load data
 		x_train,y_train,x_test,y_test = load_data()
 		print 'Code samples:',np.sum(y_train[:,0]),'No C samples:',np.sum(y_train[:,1])
 		print 'Train:',len(x_train),'Test:',len(x_test)
-		model = Inception((300,300,3),2)
+		model = VGG((300,300,3),2)
 
 		datagen = ImageDataGenerator(
 			width_shift_range=0.1,
@@ -77,7 +77,7 @@ if TRAIN:
 		# Callbacks
 		tb = TensorBoard(log_dir='TensorBoard',histogram_freq=0, write_graph=True, write_images=True)
 		es = EarlyStopping(monitor='val_acc', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
-		w = ModelCheckpoint("code_tagger_weights.h5",monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+		w = ModelCheckpoint("vgg_weights.h5",monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 		# Training
 		model.fit_generator(datagen.flow(x_train, y_train,
 			batch_size=batch_size),
