@@ -57,9 +57,9 @@ def load_data_leave_one_out(directory):
     return np.array(x_train),np.array(y_train),np.array(x_test),np.array(y_test)
 
 
-def load_data(split=.8,seed=0):
-    DATA_DIR = '../Data'
-    labels_json = json.load(open('datacleaned.json'))
+def load_data(split=.8,seed=0,single=False,prefix=''):
+    DATA_DIR = prefix+'../Data'
+    labels_json = json.load(open(prefix+'datacleaned.json'))
     images = []
     labels = []
     for i in range(len(labels_json)):
@@ -93,6 +93,8 @@ def load_data(split=.8,seed=0):
                img = img.convert('RGB')
             img = np.asarray(img)
             images.append(img)
+            if single and len(images) > 1000:
+                return np.array(images),np.array(labels)
     random.seed(seed)
     images = np.array(images)
     images,labels = shuffle(images,labels)
