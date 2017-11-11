@@ -70,6 +70,17 @@ if TRAIN:
 		functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
 		for f in functions:
 			x_train,y_train,x_test,y_test,model,weights = f(x_train,y_train,x_test,y_test)
+
+			train_break_down = ', Train C/P/H/NC:'
+			for i in range(len(y_train[0])):
+				train_break_down += str(np.sum(y_train[:,i])) +'/'
+			test_break_down = ', Test C/P/H/NC:'
+			for i in range(len(y_test[0])):
+				test_break_down += str(np.sum(y_test[:,i])) +'/'
+
+			log = open('log.txt','a')
+			log.write(weights+train_break_down[:-1]+test_break_down[:-1])
+			log.close()
 			datagen = ImageDataGenerator(
 				width_shift_range=0.1,
 				height_shift_range=0.1,
@@ -89,14 +100,7 @@ if TRAIN:
 				validation_data=(x_test, y_test),
 				callbacks=[tb,es,w])
 
-			train_break_down = ', Train C/P/H/NC:'
-			for i in range(len(y_train[0])):
-				train_break_down += str(np.sum(y_train[:,i])) +'/'
-			test_break_down = ', Test C/P/H/NC:'
-			for i in range(len(y_test[0])):
-				test_break_down += str(np.sum(y_test[:,i])) +'/'
 			log = open('log.txt','a')
-			log.write(weights+train_break_down[:-1]+test_break_down[:-1])
 			log.write(', ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
 			log.close()
 elif LOAD:
