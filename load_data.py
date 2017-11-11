@@ -57,7 +57,7 @@ def load_data_leave_one_out(directory):
     return np.array(x_train),np.array(y_train),np.array(x_test),np.array(y_test)
 
 
-def load_data(split=.8,seed=0,single=False,prefix='',load_new=False):
+def load_data(split=.8,seed=0,prefix='',load_new=False):
     if load_new:
         DATA_DIR = prefix+'../Data'
         labels_json = json.load(open(prefix+'datacleaned.json'))
@@ -94,8 +94,6 @@ def load_data(split=.8,seed=0,single=False,prefix='',load_new=False):
                    img = img.convert('RGB')
                 img = np.asarray(img)
                 images.append(img)
-                if single and len(images) > 12000:
-                    return np.array(images),np.array(labels)
         random.seed(seed)
         images = np.array(images)
         images,labels = shuffle(images,labels)
@@ -114,7 +112,7 @@ def load_data(split=.8,seed=0,single=False,prefix='',load_new=False):
         print 'Deleted:',count
         np.savez('data',x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test)
     else:
-        data = np.load('data.npz')
+        data = np.load(prefix+'data.npz')
         x_train,y_train,x_test,y_test = data['x_train'],data['y_train'],data['x_test'],data['y_test']
 
     return x_train,y_train,x_test,y_test
