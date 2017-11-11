@@ -32,7 +32,7 @@ def Inception(input_shape,num_classes):
 
 def VGG(input_shape,num_classes):
     input_tensor = Input(shape=input_shape)
-    base_model = VGG16(input_tensor=input_tensor, weights='imagenet', include_top=False)
+    base_model = VGG16(input_tensor=input_tensor, include_top=False)
 
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
