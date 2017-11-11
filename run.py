@@ -1,6 +1,7 @@
 from load_data import load_data,load_data_leave_one_out
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ModelCheckpoint,EarlyStopping,TensorBoard
+from training_options import *
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
@@ -65,26 +66,39 @@ if TRAIN:
 		x_train,y_train,x_test,y_test = load_data()
 		print 'Code samples:',np.sum(y_train[:,0]),'No C samples:',np.sum(y_train[:,1])
 		print 'Train:',len(x_train),'Test:',len(x_test)
-		model = VGG((300,300,3),2)
 
-		datagen = ImageDataGenerator(
-			width_shift_range=0.1,
-			height_shift_range=0.1,
-			zoom_range=0.2,
-			fill_mode='nearest')
-		datagen.fit(x_train)
+		functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
+		for f in functions:
+			x_train,y_train,x_test,y_test,model,weights = f(x_train,y_train,x_test,y_test)
+			datagen = ImageDataGenerator(
+				width_shift_range=0.1,
+				height_shift_range=0.1,
+				zoom_range=0.2,
+				fill_mode='nearest')
+			datagen.fit(x_train)
 
-		# Callbacks
-		tb = TensorBoard(log_dir='TensorBoard',histogram_freq=0, write_graph=True, write_images=True)
-		es = EarlyStopping(monitor='val_acc', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
-		w = ModelCheckpoint("vgg_weights.h5",monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-		# Training
-		model.fit_generator(datagen.flow(x_train, y_train,
-			batch_size=batch_size),
-			steps_per_epoch=x_train.shape[0] // batch_size,
-			epochs=epochs,
-			validation_data=(x_test, y_test),
-			callbacks=[tb,es,w])
+			# Callbacks
+			tb = TensorBoard(log_dir='TensorBoard/'+weights.replace('.h5',''),histogram_freq=0, write_graph=True, write_images=True)
+			es = EarlyStopping(monitor='val_acc', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
+			w = ModelCheckpoint(weights,monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+			# Training
+			history = model.fit_generator(datagen.flow(x_train, y_train,
+				batch_size=batch_size),
+				steps_per_epoch=x_train.shape[0] // batch_size,
+				epochs=epochs,
+				validation_data=(x_test, y_test),
+				callbacks=[tb,es,w])
+
+			train_break_down = ', Train C/P/H/NC:'
+			for i in range(len(y_train[0])):
+				train_break_down += str(np.sum(y_train[:,i])) +'/'
+			test_break_down = ', Test C/P/H/NC:'
+			for i in range(len(y_test[0])):
+				test_break_down += str(np.sum(y_test[:,i])) +'/'
+			log = open('log.txt','a')
+			log.write(weights+train_break_down[:-1]+test_break_down[:-1])
+			log.write(', ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
+			log.close()
 elif LOAD:
 	# load data
 	x_train,y_train,x_test,y_test = load_data()
