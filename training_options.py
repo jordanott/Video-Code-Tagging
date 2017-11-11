@@ -12,101 +12,107 @@ import os
 def code_vs_no_code_strict(x_train,y_train,x_test,y_test):
     X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = [],[],[],[]
     for i in range(len(x_train)):
-        if y_train[i] == np.array([1,0,0,0]):
+        if np.all(y_train[i] == np.array([1,0,0,0])):
             Y_TRAIN.append([1,0])
-        elif y_train[i] == np.array([0,0,0,1]):
+            X_TRAIN.append(x_train[i])
+        elif np.all(y_train[i] == np.array([0,0,0,1])):
             Y_TRAIN.append([0,1])
-        X_TRAIN.append(x_train[i])
+            X_TRAIN.append(x_train[i])
 
     for i in range(len(x_test)):
-        if y_test[i] == np.array([1,0,0,0]):
+        if np.all(y_test[i] == np.array([1,0,0,0])):
             Y_TEST.append([1,0])
-        elif y_test[i] == np.array([0,0,0,1]):
+            X_TEST.append(x_test[i])
+        elif np.all(y_test[i] == np.array([0,0,0,1])):
             Y_TEST.append([0,1])
-        X_TEST.append(x_test[i])
+            X_TEST.append(x_test[i])
 
     model = VGG((300,300,3),2)
-    return X_TRAIN,Y_TRAIN,X_TEST,Y_TEST,model,'code_vs_no_code_strict.h5'
+    return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'code_vs_no_code_strict.h5'
 
 def code_vs_no_code_partially(x_train,y_train,x_test,y_test):
     X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = [],[],[],[]
     for i in range(len(x_train)):
-        if y_train[i] == np.array([1,0,0,0]):
+        if np.all(y_train[i] == np.array([1,0,0,0])):
             Y_TRAIN.append([1,0])
-        elif y_train[i] == np.array([0,1,0,0]):
+            X_TRAIN.append(x_train[i])
+        elif np.all(y_train[i] == np.array([0,1,0,0])):
             Y_TRAIN.append([1,0])
-        elif y_train[i] == np.array([0,0,0,1]):
+            X_TRAIN.append(x_train[i])
+        elif np.all(y_train[i] == np.array([0,0,0,1])):
             Y_TRAIN.append([0,1])
-        X_TRAIN.append(x_train[i])
+            X_TRAIN.append(x_train[i])
 
     for i in range(len(x_test)):
-        if y_test[i] == np.array([1,0,0,0]):
+        if np.all(y_test[i] == np.array([1,0,0,0])):
             Y_TEST.append([1,0])
-        elif y_test[i] == np.array([0,1,0,0]):
+            X_TEST.append(x_test[i])
+        elif np.all(y_test[i] == np.array([0,1,0,0])):
             Y_TEST.append([1,0])
-        elif y_test[i] == np.array([0,0,0,1]):
+            X_TEST.append(x_test[i])
+        elif np.all(y_test[i] == np.array([0,0,0,1])):
             Y_TEST.append([0,1])
-        X_TEST.append(x_test[i])
+            X_TEST.append(x_test[i])
 
     model = VGG((300,300,3),2)
 
-    return X_TRAIN,Y_TRAIN,X_TEST,Y_TEST,model,'code_vs_no_code_partially.h5'
+    return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'code_vs_no_code_partially.h5'
 
 def code_vs_no_code_partially_handwritten(x_train,y_train,x_test,y_test):
     X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = [],[],[],[]
     for i in range(len(x_train)):
-        if y_train[i] == np.array([1,0,0,0]):
+        if np.all(y_train[i] == np.array([1,0,0,0])):
             Y_TRAIN.append([1,0])
-        elif y_train[i] == np.array([0,1,0,0]):
+        elif np.all(y_train[i] == np.array([0,1,0,0])):
             Y_TRAIN.append([1,0])
-        elif y_train[i] == np.array([0,0,1,0]):
+        elif np.all(y_train[i] == np.array([0,0,1,0])):
             Y_TRAIN.append([1,0])
-        elif y_train[i] == np.array([0,0,0,1]):
+        elif np.all(y_train[i] == np.array([0,0,0,1])):
             Y_TRAIN.append([0,1])
         X_TRAIN.append(x_train[i])
 
     for i in range(len(x_test)):
-        if y_test[i] == np.array([1,0,0,0]):
+        if np.all(y_test[i] == np.array([1,0,0,0])):
             Y_TEST.append([1,0])
-        elif y_test[i] == np.array([0,1,0,0]):
+        elif np.all(y_test[i] == np.array([0,1,0,0])):
             Y_TEST.append([1,0])
-        elif y_test[i] == np.array([0,0,1,0]):
+        elif np.all(y_test[i] == np.array([0,0,1,0])):
             Y_TEST.append([1,0])
-        elif y_test[i] == np.array([0,0,0,1]):
+        elif np.all(y_test[i] == np.array([0,0,0,1])):
             Y_TEST.append([0,1])
         X_TEST.append(x_test[i])
 
     model = VGG((300,300,3),2)
 
-    return X_TRAIN,Y_TRAIN,X_TEST,Y_TEST,model,'code_vs_no_code_partially_handwritten.h5'
+    return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'code_vs_no_code_partially_handwritten.h5'
 
 def handwritten_vs_else(x_train,y_train,x_test,y_test):
     X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = [],[],[],[]
     for i in range(len(x_train)):
-        if y_train[i] == np.array([1,0,0,0]):
+        if np.all(y_train[i] == np.array([1,0,0,0])):
             Y_TRAIN.append([0,1])
-        elif y_train[i] == np.array([0,1,0,0]):
+        elif np.all(y_train[i] == np.array([0,1,0,0])):
             Y_TRAIN.append([0,1])
-        elif y_train[i] == np.array([0,0,1,0]):
+        elif np.all(y_train[i] == np.array([0,0,1,0])):
             Y_TRAIN.append([1,0])
-        elif y_train[i] == np.array([0,0,0,1]):
+        elif np.all(y_train[i] == np.array([0,0,0,1])):
             Y_TRAIN.append([0,1])
         X_TRAIN.append(x_train[i])
 
     for i in range(len(x_test)):
-        if y_test[i] == np.array([1,0,0,0]):
+        if np.all(y_test[i] == np.array([1,0,0,0])):
             Y_TEST.append([0,1])
-        elif y_test[i] == np.array([0,1,0,0]):
+        elif np.all(y_test[i] == np.array([0,1,0,0])):
             Y_TEST.append([0,1])
-        elif y_test[i] == np.array([0,0,1,0]):
+        elif np.all(y_test[i] == np.array([0,0,1,0])):
             Y_TEST.append([1,0])
-        elif y_test[i] == np.array([0,0,0,1]):
+        elif np.all(y_test[i] == np.array([0,0,0,1])):
             Y_TEST.append([0,1])
         X_TEST.append(x_test[i])
 
     model = VGG((300,300,3),2)
 
-    return X_TRAIN,Y_TRAIN,X_TEST,Y_TEST,model,'handwritten_vs_else.h5'
+    return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'handwritten_vs_else.h5'
 
 def all_four(x_train,y_train,x_test,y_test):
     model = VGG((300,300,3),4)
