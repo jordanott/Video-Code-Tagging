@@ -63,13 +63,13 @@ if TRAIN:
 
 	else:
 		# load data
-		x_train,y_train,x_test,y_test = load_data()
-		print 'Code samples:',np.sum(y_train[:,0]),'No C samples:',np.sum(y_train[:,1])
-		print 'Train:',len(x_train),'Test:',len(x_test)
+		X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = load_data()
+		print 'Code samples:',np.sum(Y_TRAIN[:,0]),'No C samples:',np.sum(Y_TRAIN[:,1])
+		print 'Train:',len(X_TRAIN),'Test:',len(X_TEST)
 
 		functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
 		for f in functions:
-			x_train,y_train,x_test,y_test,model,weights = f(x_train,y_train,x_test,y_test)
+			x_train,y_train,x_test,y_test,model,weights = f(X_TRAIN,Y_TRAIN,X_TEST,Y_TEST)
 
 			train_break_down = ', Train C/P/H/NC:'
 			for i in range(len(y_train[0])):
