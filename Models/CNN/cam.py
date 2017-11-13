@@ -12,7 +12,7 @@ from vis.visualization.saliency import visualize_cam
 # make images folder
 os.mkdir('Images/')
 # load data from file
-x_train,y_train,x_test,y_test = load_data(prefix='../../')
+X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = load_data(prefix='../../')
 # class options
 two_options = {0:'code',1:'nc'}
 four_options = {0:'code',1:'partially',2:'handwritten',3:'nc'}
@@ -20,7 +20,7 @@ four_options = {0:'code',1:'partially',2:'handwritten',3:'nc'}
 functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
 for f in functions:
     # get data, model and weights file name from training options function
-    x_train,y_train,x_test,y_test,model,weights = f(x_train,y_train,x_test,y_test)
+    x_train,y_train,x_test,y_test,model,weights = f(X_TRAIN,Y_TRAIN,X_TEST,Y_TEST)
     # load weights file
     model.load_weights('../../'+weights)
     # make directory for images
