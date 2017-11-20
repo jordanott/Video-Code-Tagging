@@ -4,11 +4,15 @@ from keras.callbacks import ModelCheckpoint,EarlyStopping,TensorBoard
 from training_options import *
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 import argparse
+import json
 import sys
 sys.path.append('Models/CNN/')
 from model import Inception,VGG
 import os
+
+random.seed(0)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--load',action="store_true")
@@ -62,47 +66,87 @@ if TRAIN:
 			log.write(',ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
 
 	else:
-		# load data
-		X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = load_data()
-		print 'Code samples:',np.sum(Y_TRAIN[:,0]),'No C samples:',np.sum(Y_TRAIN[:,1])
-		print 'Train:',len(X_TRAIN),'Test:',len(X_TEST)
+		all_folds_acc = {
+		'code_vs_no_code_strict.h5':[],
+		'code_vs_no_code_partially.h5':[],
+		'code_vs_no_code_partially_handwritten.h5':[],
+		'handwritten_vs_else.h5':[],
+		'all_four.h5':[]
+		}
+		all_folds_ds = {
+		'code_vs_no_code_strict.h5':[[0,0],[0,0]],
+		'code_vs_no_code_partially.h5':[[0,0],[0,0]],
+		'code_vs_no_code_partially_handwritten.h5':[[0,0],[0,0]],
+		'handwritten_vs_else.h5':[[0,0],[0,0]],
+		'all_four.h5':[[0,0,0,0],[0,0,0,0]]
+		}
+		for fold in range(5):
+			os.mkdir('Fold_'+str(fold))
+			# load data
+			X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = load_data(fold=fold,load_new=True)
+			print 'Code samples:',np.sum(Y_TRAIN[:,0]),'No C samples:',np.sum(Y_TRAIN[:,1])
+			print 'Train:',len(X_TRAIN),'Test:',len(X_TEST)
 
-		functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
-		for f in functions:
-			x_train,y_train,x_test,y_test,model,weights = f(X_TRAIN,Y_TRAIN,X_TEST,Y_TEST)
+			functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
+			for f in functions:
+				x_train,y_train,x_test,y_test,model,weights = f(X_TRAIN,Y_TRAIN,X_TEST,Y_TEST)
 
-			train_break_down = ', Train C/P/H/NC:'
-			for i in range(len(y_train[0])):
-				train_break_down += str(np.sum(y_train[:,i])) +'/'
-			test_break_down = ', Test C/P/H/NC:'
-			for i in range(len(y_test[0])):
-				test_break_down += str(np.sum(y_test[:,i])) +'/'
+				train_break_down = ', Train C/P/H/NC:'
+				for i in range(len(y_train[0])):
+					train_break_down += str(np.sum(y_train[:,i])) +'/'
+				test_break_down = ', Test C/P/H/NC:'
+				for i in range(len(y_test[0])):
+					test_break_down += str(np.sum(y_test[:,i])) +'/'
 
-			log = open('log.txt','a')
-			log.write(weights+train_break_down[:-1]+test_break_down[:-1])
-			log.close()
-			datagen = ImageDataGenerator(
-				width_shift_range=0.1,
-				height_shift_range=0.1,
-				zoom_range=0.2,
-				fill_mode='nearest')
-			datagen.fit(x_train)
+				for i in range(y_train.shape[1]):
+					all_folds_ds[weights][0][i] += np.sum(y_train[:,i])
+				for i in range(y_test.shape[1]):
+					all_folds_ds[weights][1][i] += np.sum(y_test[:,i])
 
-			# Callbacks
-			tb = TensorBoard(log_dir='TensorBoard/'+weights.replace('.h5',''),histogram_freq=0, write_graph=True, write_images=True)
-			es = EarlyStopping(monitor='val_acc', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
-			w = ModelCheckpoint(weights,monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-			# Training
-			history = model.fit_generator(datagen.flow(x_train, y_train,
-				batch_size=batch_size),
-				steps_per_epoch=x_train.shape[0] // batch_size,
-				epochs=epochs,
-				validation_data=(x_test, y_test),
-				callbacks=[tb,es,w])
+				log = open('Fold_'+str(fold)+'/log.txt','a')
+				log.write(weights+train_break_down[:-1]+test_break_down[:-1])
+				log.close()
+				datagen = ImageDataGenerator(
+					width_shift_range=0.1,
+					height_shift_range=0.1,
+					zoom_range=0.2,
+					fill_mode='nearest')
+				datagen.fit(x_train)
 
-			log = open('log.txt','a')
-			log.write(', ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
-			log.close()
+				# Callbacks
+				tb = TensorBoard(log_dir='TensorBoard/'+'Fold_'+str(fold)+'/'+weights.replace('.h5',''),histogram_freq=0, write_graph=True, write_images=True)
+				es = EarlyStopping(monitor='val_acc', min_delta=0, patience=PATIENCE, verbose=0, mode='auto')
+				w = ModelCheckpoint('Fold_'+str(fold)+'/'+weights,monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+				# Training
+				history = model.fit_generator(datagen.flow(x_train, y_train,
+					batch_size=batch_size),
+					steps_per_epoch=x_train.shape[0] // batch_size,
+					epochs=epochs,
+					validation_data=(x_test, y_test),
+					callbacks=[tb,es,w])
+
+				log = open('Fold_'+str(fold)+'/log.txt','a')
+				log.write(', ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
+				log.close()
+				all_folds[weights].append(100*max(history.history['val_acc']))
+		with open('all_folds_acc.json', 'w') as fp:
+			json.dump(all_folds_acc, fp)
+
+		with open('all_folds_ds.json', 'w') as fp:
+			json.dump(all_folds_ds, fp)
+
+		with open('latex.txt', 'w') as latex:
+			for key in all_folds_ds.keys():
+				line = key.replace('.h5','')
+				line += ' & '
+				# train
+				for i in range(len(all_folds_ds[key][0])):
+					line += all_folds_ds[key][0] + ','
+				line = line[:-1] + ' & '
+				# test
+				for i in range(len(all_folds_ds[key][1])):
+					line += all_folds_ds[key][1] + ','
+				line = line[:-1] + ' \\\\\n'
 elif LOAD:
 	# load data
 	x_train,y_train,x_test,y_test = load_data()
