@@ -128,7 +128,7 @@ if TRAIN:
 				log = open('Fold_'+str(fold)+'/log.txt','a')
 				log.write(', ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
 				log.close()
-				all_folds[weights].append(100*max(history.history['val_acc']))
+				all_folds_acc[weights].append(100*max(history.history['val_acc']))
 
 		with open('all_folds_acc.json', 'w') as fp:
 			json.dump(all_folds_acc, fp)
