@@ -129,6 +129,7 @@ if TRAIN:
 				log.write(', ValAcc:'+"{0:.2f}".format(100*max(history.history['val_acc']))+'\n')
 				log.close()
 				all_folds[weights].append(100*max(history.history['val_acc']))
+
 		with open('all_folds_acc.json', 'w') as fp:
 			json.dump(all_folds_acc, fp)
 
@@ -141,12 +142,13 @@ if TRAIN:
 				line += ' & '
 				# train
 				for i in range(len(all_folds_ds[key][0])):
-					line += all_folds_ds[key][0] + ','
+					line += str(all_folds_ds[key][0][i]) + ','
 				line = line[:-1] + ' & '
 				# test
 				for i in range(len(all_folds_ds[key][1])):
-					line += all_folds_ds[key][1] + ','
+					line += str(all_folds_ds[key][1][i]) + ','
 				line = line[:-1] + ' \\\\\n'
+				latex.write(line)
 elif LOAD:
 	# load data
 	x_train,y_train,x_test,y_test = load_data()
