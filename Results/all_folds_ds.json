@@ -1,0 +1,1 @@
+{"all_four.h5": [[34530, 5548, 1572, 35150], [8670, 1347, 378, 8805]], "handwritten_vs_else.h5": [[1572, 75228], [378, 18822]], "code_vs_no_code_partially.h5": [[40078, 35150], [10017, 8805]], "code_vs_no_code_partially_handwritten.h5": [[41650, 35150], [10395, 8805]], "code_vs_no_code_strict.h5": [[34530, 35150], [8670, 8805]]}
