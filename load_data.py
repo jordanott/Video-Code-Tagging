@@ -116,3 +116,19 @@ def load_data(split=.8,prefix='',fold=0,load_new=False):
         x_train,y_train,x_test,y_test = data['x_train'],data['y_train'],data['x_test'],data['y_test']
 
     return x_train,y_train,x_test,y_test
+
+def load_custom(location):
+    images = []
+    labels = []
+    for custom_file in os.listdir(location):
+        if custom_file.endswith('.jpg'):
+            complete_location = location+custom_file
+            img = Image.open(complete_location)
+            if img.mode != 'RGB':
+               img = img.convert('RGB')
+            img = np.asarray(img)
+            images.append(img)
+
+    images = np.array(images)
+
+    return images
