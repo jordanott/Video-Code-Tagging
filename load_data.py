@@ -121,7 +121,7 @@ def load_custom(location):
     images = []
     labels = []
     for custom_file in os.listdir(location):
-        if custom_file.endswith('.jpg'):
+        if custom_file.endswith('.jpg') or custom_file.endswith('.png') or custom_file.endswith('.JPG'):
             complete_location = location+custom_file
             img = Image.open(complete_location)
             if img.mode != 'RGB':
