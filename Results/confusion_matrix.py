@@ -6,6 +6,8 @@ sys.path.append('../')
 from training_options import *
 from load_data import load_custom
 from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import itertools
 # class options
 two = ['Code','No Code']
 four = ['VC','PVC','HC','NC']
@@ -48,7 +50,7 @@ def plot_confusion_matrix(cm, classes,normalize=False,title='Confusion matrix',c
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-
+'''
 for f in functions:
     print 'new function'
     for fold in range(0,5):
@@ -74,13 +76,26 @@ np.savez('actual',code_vs_no_code_strict=results['code_vs_no_code_strict.h5']['a
     code_vs_no_code_partially=results['code_vs_no_code_partially.h5']['actual'],
     code_vs_no_code_partially_handwritten=results['code_vs_no_code_partially_handwritten.h5']['actual'],
     handwritten_vs_else=results['handwritten_vs_else.h5']['actual'],
-    all_four=results['all_four.h5']['actual'],)
+    all_four=results['all_four.h5']['actual'])
 
 np.savez('predicted',code_vs_no_code_strict=results['code_vs_no_code_strict.h5']['predicted'],
     code_vs_no_code_partially=results['code_vs_no_code_partially.h5']['predicted'],
     code_vs_no_code_partially_handwritten=results['code_vs_no_code_partially_handwritten.h5']['predicted'],
     handwritten_vs_else=results['handwritten_vs_else.h5']['predicted'],
-    all_four=results['all_four.h5']['predicted'],)
+    all_four=results['all_four.h5']['predicted'])
+'''
+actual = np.load('actual.npz')
+results['code_vs_no_code_strict.h5']['actual'] = actual['code_vs_no_code_strict']
+results['code_vs_no_code_partially.h5']['actual'] = actual['code_vs_no_code_partially']
+results['code_vs_no_code_partially_handwritten.h5']['actual'] = actual['code_vs_no_code_partially_handwritten']
+results['handwritten_vs_else.h5']['actual'] = actual['handwritten_vs_else']
+results['all_four.h5']['actual'] = actual['all_four']
+predicted = np.load('predicted.npz')
+results['code_vs_no_code_strict.h5']['predicted'] = predicted['code_vs_no_code_strict']
+results['code_vs_no_code_partially.h5']['predicted'] = predicted['code_vs_no_code_partially']
+results['code_vs_no_code_partially_handwritten.h5']['predicted'] = predicted['code_vs_no_code_partially_handwritten']
+results['handwritten_vs_else.h5']['predicted'] = predicted['handwritten_vs_else']
+results['all_four.h5']['predicted'] = predicted['all_four']
 
 for key in results.keys():
     y_test = results[key]['actual']
