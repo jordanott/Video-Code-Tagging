@@ -2,7 +2,7 @@ from keras.applications.inception_v3 import InceptionV3
 from keras.applications.vgg16 import VGG16
 from keras.preprocessing import image
 from keras.models import Model
-from keras.layers import Dense, GlobalAveragePooling2D, Input
+from keras.layers import Dense, GlobalAveragePooling2D, Input,Conv2D, MaxPooling2D, UpSampling2D
 from keras import backend as K
 from keras.optimizers import SGD
 import numpy as np
@@ -51,3 +51,28 @@ def VGG(input_shape,num_classes):
     # compile the model (should be done *after* setting layers to non-trainable)
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])
     return model
+
+
+def conv_ae(input_shape):
+    input_img = Input(shape=input_shape)  # adapt this if using `channels_first` image data format
+
+    x = Conv2D(64, (3, 3), activation='relu', padding='same')(input_img)
+    x = MaxPooling2D((2, 2), padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2, 2), padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    encoded = MaxPooling2D((2, 2), padding='same')(x)
+
+    # at this point the representation is (4, 4, 8) i.e. 128-dimensional
+
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(encoded)
+    x = UpSampling2D((2, 2))(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    x = UpSampling2D((2, 2))(x)
+    x = Conv2D(64, (3, 3), activation='relu')(x)
+    x = UpSampling2D((2, 2))(x)
+    decoded = Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
+
+    autoencoder = Model(input_img, decoded)
+    autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
+    return autoencoder
