@@ -23,9 +23,20 @@ if TRAIN:
     model.save_weights('ae.h5')
 else:
     model.load_weights('ae.h5')
+    model.summary()
     for _ in range(7):
         model.layers.pop()
     print model.summary()
+    model.compile(optimizer='adadelta',loss='binary_crossentropy')
 
     encodings = model.predict(x_test)
     print encodings.shape
+    m = 1000000
+    n_i = 0
+    old_m = m
+    for i in range(1,encodings.shape[0]):
+         m = min(np.linalg.norm(encodings[0]-encodings[i]))
+         if old_m != m:
+              n_i = i
+              old_m = m
+    print m,n_i
