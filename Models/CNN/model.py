@@ -52,6 +52,18 @@ def VGG(input_shape,num_classes):
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])
     return model
 
+def conv_e(input_shape):
+    input_img = Input(shape=input_shape)  # adapt this if using `channels_first` image data format
+
+    x = Conv2D(64, (3, 3), activation='relu', padding='same')(input_img)
+    x = MaxPooling2D((2, 2), padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    x = MaxPooling2D((2, 2), padding='same')(x)
+    x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+    encoded = MaxPooling2D((2, 2), padding='same')(x)
+
+    encoded.compile(optimizer='adadelta', loss='binary_crossentropy')
+    return autoencoder
 
 def conv_ae(input_shape):
     input_img = Input(shape=input_shape)  # adapt this if using `channels_first` image data format
