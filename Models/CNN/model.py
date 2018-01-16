@@ -61,9 +61,10 @@ def conv_e(input_shape):
     x = MaxPooling2D((2, 2), padding='same')(x)
     x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
     encoded = MaxPooling2D((2, 2), padding='same')(x)
+    encoder = Model(input_img,encoded)
 
-    encoded.compile(optimizer='adadelta', loss='binary_crossentropy')
-    return autoencoder
+    encoder.compile(optimizer='adadelta', loss='binary_crossentropy')
+    return encoder
 
 def conv_ae(input_shape):
     input_img = Input(shape=input_shape)  # adapt this if using `channels_first` image data format

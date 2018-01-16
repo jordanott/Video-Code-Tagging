@@ -1,6 +1,6 @@
 from keras.callbacks import TensorBoard
 import numpy as np
-from model import conv_ae
+from model import conv_ae,conv_e
 
 TRAIN = False
 batch_size = 32
@@ -27,16 +27,25 @@ else:
     for i in range(7):
         params = model.layers[i].get_weights()
         if params != []:
-            encoder.layers[count].set_weights([params[0],params[1]])
+            encoder.layers[i].set_weights([params[0],params[1]])
 
-    encodings = model.predict(x_test)
+    encodings = encoder.predict(x_test)
     print encodings.shape
-    m = 1000000
-    n_i = 0
-    old_m = m
-    for i in range(1,encodings.shape[0]):
-         m = min(np.linalg.norm(encodings[0]-encodings[i]))
-         if old_m != m:
-              n_i = i
-              old_m = m
-    print m,n_i
+
+    def plot(img1,img2):
+        f,ax = plt.subplots(1,2)
+        ax[0].imshow(img1)
+        ax[1].imshow(img2)
+        plt.show()
+    
+    def dist(vector):
+        return np.linalg.norm(encodings[0] - vector[0])
+
+    items = []
+    for i,j in enumerate(encodings):
+        items.append([j,i])
+ 
+    items = sorted(items,key=dist)
+    print items[0][1]
+    print items[1][1]
+    print items[len(items)-1][1]    
