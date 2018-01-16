@@ -22,12 +22,12 @@ if TRAIN:
                 callbacks=[TensorBoard(log_dir='autoencoder')])
     model.save_weights('ae.h5')
 else:
+    encoder = conv_e((300,300,3))
     model.load_weights('ae.h5')
-    model.summary()
-    for _ in range(7):
-        model.layers.pop()
-    print model.summary()
-    model.compile(optimizer='adadelta',loss='binary_crossentropy')
+    for i in range(7):
+        params = model.layers[i].get_weights()
+        if params != []:
+            encoder.layers[count].set_weights([params[0],params[1]])
 
     encodings = model.predict(x_test)
     print encodings.shape
