@@ -5,18 +5,32 @@ from model import conv_ae,conv_e
 import os
 
 TRAIN = True
+LOAD_DATA = True
 batch_size = 32
 epochs = 500
 PATIENCE = 20
+counter = 0
 
-images = np.empty((1,300,300,3))
-for subdir,dirs,files in os.walk('../../../Data/'):
-    for img in files:
-        if img.endswith('_resized.png'):
-            img_path = os.path.join(subdir,img)
-            image = np.array(load_img(img_path,target_size=(300,300,3))).reshape(1,300,300,3)
-            images = np.append(images,image,axis=0)
-print 'Data loaded...', images.shape
+if not LOAD_DATA:
+    images = np.empty((1,300,300,3))
+    for subdir,dirs,files in os.walk('../../../Data/'):
+        for img in files:
+            if img.endswith('_resized.png'):
+                img_path = os.path.join(subdir,img)
+                image = np.array(load_img(img_path,target_size=(300,300,3))).reshape(1,300,300,3)
+                images = np.append(images,image,axis=0)
+                counter += 1
+            if counter % 5000 == 0:
+                print 'Images saved:',counter
+                 
+    print 'Data loaded...', images.shape
+    np.savez('all_images',images=images)
+else:
+    data = np.load('../../Fold_0/data.npz')
+    x_train,y_train,x_test,y_test = data['x_train'],data['y_train'],data['x_test'],data['y_test']
+    images = x_train
+
+print 'Data saved...'
 model = conv_ae((300,300,3))
 print 'Model loaded...'
 if TRAIN:
