@@ -4,7 +4,7 @@ import random
 import sys
 import os
 app = Flask(__name__)
-
+# scp ott109@192.168.200.30:/home/ott109/Video-Code-Tagging/Models/CNN/ae.h5 .
 sys.path.append('../Models/CNN/')
 from model import *
 
@@ -13,6 +13,7 @@ def hello_world():
     return 'Hello, World!'
 
 def pull_video(url,quality):
+    # generate random num for directory name
     name = str(random.getrandbits(128))
     path = 'Downloads/' + name + quality + '/'
     Q = quality.replace('_','')
@@ -44,80 +45,90 @@ def make_timestamps(times_list):
 @app.route('/link/<path:link>',methods=['GET'])
 def get_link(link):
     import time
-    start = time.time()
     json_obj = {
     'youtubeId':request.args['v'],
-    'times':[]
+    'code_times':[]
     }
-
     link += '?'
+    # build link from args
     for key in request.args.keys():
         link += key + '=' + request.args[key]
-    print link
-    # generate random number for dir name
     success = False
     qualities = ['_720','_480','_360']
     error = 0
+    start = time.time()
+    # pull video from YouTube
     while not success:
         directory = pull_video(link,qualities[error])
         if directory:
             success = True
             break
         error += 1
+    print 'Time to pull video',time.time() - start
     if error == len(qualities):
         return False
-    print time.time() - start
     # load model and weights
     model = VGG((300,300,3),2)
     model.load_weights('../Fold_0/code_vs_no_code_strict.h5')
-    print 'model loaded'
     # load images from new video
     images = np.empty((1,300,300,3))
     for img in os.listdir(directory):
         if img.endswith('png'):
             image = np.array(load_img(directory+img,target_size=(300,300,3))).reshape(1,300,300,3)
             images = np.append(images,image,axis=0)
-    print images.shape
     # predict images
+    start = time.time()
     predictions = model.predict(images)
-
-    print np.sum(np.argmax(predictions,axis=1))
+    print 'Predicting images time', time.time() - start
+    print predictions.shape
+    # get indexes where it was predicted code
     code_times = np.squeeze(np.array(np.where(np.argmax(predictions,axis=1)==0)))
-    print code_times.shape
+    # get images that were predicted code
     code_images = images[code_times]
-    print code_images.shape
-    json_obj['times'] = make_timestamps(code_times)
-    print json_obj
-    # autoencoder
+    # create time stamps and store in json_obj
+    json_obj['code_times'] = make_timestamps(code_times)
+    # load autoencoder
     encoder = conv_e((300,300,3))
     autoencoder = conv_ae((300,300,3))
     autoencoder.load_weights('../Models/CNN/ae.h5')
+    # load autoencoder pretrained weights into encoder network
     for i in range(7):
         params = autoencoder.layers[i].get_weights()
         if params != []:
             encoder.layers[i].set_weights([params[0],params[1]])
-
+    # predict encodings
+    start = time.time()
     encodings = encoder.predict(code_images)
+    print 'Encode time', time.time() - start
     print encodings.shape
-    print time.time() - start
-    def plot(img1,img2):
-        f,ax = plt.subplots(1,2)
-        ax[0].imshow(img1)
-        ax[1].imshow(img2)
-        plt.show()
-
-    def dist(vector):
-        return np.linalg.norm(encodings[0] - vector[0])
-
-    items = []
+    # store [encoding,video-time] in items
     for i,j in zip(code_times,encodings):
         items.append([j,i])
 
-    items = sorted(items,key=dist)
-    print time.time() - start
-    for item in items:
-        print item[1],dist(item)
+    time_steps = {}
+    tmp = []
+    # compare encodings to each other
+    start = time.time()
+    for i in range(len(items)):
+        tuples = np.empty((1,2))
+        for j in range(len(items)):
+            # euclidean distance between encodings
+            dist = np.linalg.norm(items[i][0] - items[j][0])
+            tmp.append(dist)
+            # add distance and index 
+            tuples = np.append(tuples,np.array([dist,items[j][1]]))
+        # store all distances for a given video time
+        time_steps[items[i][1]] = tuples
+    print 'Comparing encodings', time.time() - start
+    print encodings.shape
 
+    std = np.std(tmp)
+    mean = np.mean(tmp)
+    for key in time_steps.keys():
+        where = np.where(time_steps[key][:,0] < mean - 3*std)
+        time_steps[key] = time_steps[key][where][:,1]
+
+    json_obj['similar_times'] = time_steps
     return jsonify(json_obj)
 
 if __name__ == "__main__":
