@@ -20,12 +20,15 @@ print 'Data loaded...', images.shape
 model = conv_ae((300,300,3))
 print 'Model loaded...'
 if TRAIN:
+    import time
+    start = time.time()
     model.fit(images, images,
                 epochs=epochs,
                 batch_size=batch_size,
                 shuffle=True,
                 validation_data=(images, images),
                 callbacks=[TensorBoard(log_dir='autoencoder')])
+    print time.time() - start
     model.save_weights('ae.h5')
 else:
     encoder = conv_e((300,300,3))
