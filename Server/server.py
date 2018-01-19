@@ -101,6 +101,8 @@ def get_link(link):
     encodings = encoder.predict(code_images)
     print 'Encode time', time.time() - start
     print encodings.shape
+
+    items = []
     # store [encoding,video-time] in items
     for i,j in zip(code_times,encodings):
         items.append([j,i])
@@ -115,8 +117,8 @@ def get_link(link):
             # euclidean distance between encodings
             dist = np.linalg.norm(items[i][0] - items[j][0])
             tmp.append(dist)
-            # add distance and index 
-            tuples = np.append(tuples,np.array([dist,items[j][1]]))
+            # add distance and index
+            tuples = np.append(tuples,np.array([[dist,items[j][1]]]),axis=0)
         # store all distances for a given video time
         time_steps[items[i][1]] = tuples
     print 'Comparing encodings', time.time() - start
@@ -125,8 +127,8 @@ def get_link(link):
     std = np.std(tmp)
     mean = np.mean(tmp)
     for key in time_steps.keys():
-        where = np.where(time_steps[key][:,0] < mean - 3*std)
-        time_steps[key] = time_steps[key][where][:,1]
+        where = np.where(time_steps[key][:,0] < mean - std)
+        time_steps[key] = time_steps[key][where][:,1].tolist()
 
     json_obj['similar_times'] = time_steps
     return jsonify(json_obj)
