@@ -76,6 +76,7 @@ def get_link(link):
         if img.endswith('png'):
             image = np.array(load_img(directory+img,target_size=(300,300,3))).reshape(1,300,300,3)
             images = np.append(images,image,axis=0)
+    images = np.delete(images,0,0)
     # predict images
     start = time.time()
     predictions = model.predict(images)
