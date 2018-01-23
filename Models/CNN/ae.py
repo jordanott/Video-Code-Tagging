@@ -1,17 +1,34 @@
 from keras.preprocessing.image import load_img
 from keras.callbacks import TensorBoard
+import matplotlib.pyplot as plt
 import numpy as np
 from model import conv_ae,conv_e
 import os
 
-TRAIN = True
-LOAD_DATA = True
+TRAIN = False
+LOAD_TYPE = 'pre'
 batch_size = 32
-epochs = 500
+epochs = 700
 PATIENCE = 20
 counter = 0
 
-if not LOAD_DATA:
+def get_code(x_train,y_train,x_test,y_test):
+    X_TRAIN = []
+    for i in range(len(x_train)):
+        if np.all(y_train[i] == np.array([1,0,0,0])):
+            X_TRAIN.append(x_train[i])
+        elif np.all(y_train[i] == np.array([0,1,0,0])):
+            X_TRAIN.append(x_train[i])
+
+    for i in range(len(x_test)):
+        if np.all(y_test[i] == np.array([1,0,0,0])):
+            X_TRAIN.append(x_train[i])
+        elif np.all(y_test[i] == np.array([0,1,0,0])):
+            X_TRAIN.append(x_train[i])
+
+    return np.array(X_TRAIN)
+
+if LOAD_TYPE == 'original':
     images = np.empty((1,300,300,3))
     for subdir,dirs,files in os.walk('../../../Data/'):
         for img in files:
@@ -22,15 +39,26 @@ if not LOAD_DATA:
                 counter += 1
             if counter % 5000 == 0:
                 print 'Images saved:',counter
-                 
-    print 'Data loaded...', images.shape
     np.savez('all_images',images=images)
-else:
+
+elif LOAD_TYPE == 'aug':
+    images = np.empty((1,300,300,3))
     data = np.load('../../Fold_0/data.npz')
     x_train,y_train,x_test,y_test = data['x_train'],data['y_train'],data['x_test'],data['y_test']
-    images = x_train
+    images = np.append(images,x_train[1].reshape(1,300,300,3),axis=0)
+    for f in os.listdir('../../Pics/'):
+        print f
+        image = np.array(load_img('../../Pics/'+f,target_size=(300,300,3))).reshape(1,300,300,3)
+        images = np.append(images,image,axis=0)
+    images = images.astype('uint8')
 
-print 'Data saved...'
+elif LOAD_TYPE == 'pre':
+    data = np.load('../../Fold_0/data.npz')
+    x_train,y_train,x_test,y_test = data['x_train'],data['y_train'],data['x_test'],data['y_test']
+    images = get_code(x_train,y_train,x_test,y_test)
+
+print 'Data loaded...',images.shape
+
 model = conv_ae((300,300,3))
 print 'Model loaded...'
 if TRAIN:
@@ -52,7 +80,7 @@ else:
         if params != []:
             encoder.layers[i].set_weights([params[0],params[1]])
 
-    encodings = encoder.predict(x_test)
+    encodings = encoder.predict(images)
     print encodings.shape
 
     def plot(img1,img2):
@@ -61,14 +89,9 @@ else:
         ax[1].imshow(img2)
         plt.show()
 
-    def dist(vector):
-        return np.linalg.norm(encodings[0] - vector[0])
-
     items = []
-    for i,j in enumerate(encodings):
-        items.append([j,i])
+    plot(images[1],images[2])
+    for i in range(encodings.shape[0]):
+        items.append(np.linalg.norm(encodings[1] - encodings[i]))
 
-    items = sorted(items,key=dist)
-    print items[0][1]
-    print items[1][1]
-    print items[len(items)-1][1]
+    print items
