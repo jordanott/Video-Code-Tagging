@@ -1,5 +1,6 @@
 from flask import Flask,request,jsonify
 from keras.preprocessing.image import load_img
+from random import *
 import random
 import sys
 import os
@@ -72,10 +73,15 @@ def get_link(link):
     model.load_weights('../Fold_0/code_vs_no_code_strict.h5')
     # load images from new video
     images = np.empty((1,300,300,3))
+    file_count = 1
     for img in os.listdir(directory):
+        path = directory + str(file_count) + '.png'
         if img.endswith('png'):
-            image = np.array(load_img(directory+img,target_size=(300,300,3))).reshape(1,300,300,3)
+            image = np.array(load_img(path,target_size=(300,300,3))).reshape(1,300,300,3)
             images = np.append(images,image,axis=0)
+        else:
+            continue
+        file_count += 1
     images = np.delete(images,0,0)
     # predict images
     start = time.time()
@@ -91,7 +97,7 @@ def get_link(link):
     # load autoencoder
     encoder = conv_e((300,300,3))
     autoencoder = conv_ae((300,300,3))
-    autoencoder.load_weights('../Models/CNN/ae.h5')
+    autoencoder.load_weights('../Models/CNN/code_ae.h5')
     # load autoencoder pretrained weights into encoder network
     for i in range(7):
         params = autoencoder.layers[i].get_weights()
@@ -108,25 +114,45 @@ def get_link(link):
     for i,j in zip(code_times,encodings):
         items.append([j,i])
 
+    import matplotlib.pyplot as plt
+    def plot(img1,img2,title):
+        f,ax = plt.subplots(1,2)
+        ax[0].imshow(img1)
+        ax[1].imshow(img2)
+        plt.title(title)
+        plt.show()
+
     time_steps = {}
     tmp = []
+    images = images.astype('uint8')
     # compare encodings to each other
+
     start = time.time()
     for i in range(len(items)):
         tuples = np.empty((1,2))
         for j in range(len(items)):
             # euclidean distance between encodings
             dist = np.linalg.norm(items[i][0] - items[j][0])
+            '''
+            if randint(1, 30) == 3:
+                if items[i][1] < 60:
+                    continue
+                print dist
+                plot(images[items[i][1]].reshape(300,300,3),images[items[j][1]].reshape(300,300,3),str(items[i][1]) +' & '+ str(items[j][1]))
+            '''
             tmp.append(dist)
             # add distance and index
             tuples = np.append(tuples,np.array([[dist,items[j][1]]]),axis=0)
+        tuples = np.delete(tuples,0,0)
         # store all distances for a given video time
-        time_steps[items[i][1]] = tuples
+        time_steps[items[i][1]] = tuples#.tolist()
     print 'Comparing encodings', time.time() - start
     print encodings.shape
 
     std = np.std(tmp)
     mean = np.mean(tmp)
+    print mean,std
+
     for key in time_steps.keys():
         where = np.where(time_steps[key][:,0] < mean - std)
         time_steps[key] = time_steps[key][where][:,1].tolist()
