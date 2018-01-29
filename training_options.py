@@ -119,16 +119,18 @@ def handwritten_vs_no_code(x_train,y_train,x_test,y_test):
     for i in range(len(x_train)):
         if np.all(y_train[i] == np.array([0,0,1,0])):
             Y_TRAIN.append([1,0])
+            X_TRAIN.append(x_train[i])
         elif np.all(y_train[i] == np.array([0,0,0,1])):
             Y_TRAIN.append([0,1])
-        X_TRAIN.append(x_train[i])
+            X_TRAIN.append(x_train[i])
 
     for i in range(len(x_test)):
         if np.all(y_test[i] == np.array([0,0,1,0])):
             Y_TEST.append([1,0])
+            X_TEST.append(x_test[i])
         elif np.all(y_test[i] == np.array([0,0,0,1])):
             Y_TEST.append([0,1])
-        X_TEST.append(x_test[i])
+            X_TEST.append(x_test[i])
 
     model = VGG((300,300,3),2)
 
