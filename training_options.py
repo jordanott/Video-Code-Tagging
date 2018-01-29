@@ -114,6 +114,26 @@ def handwritten_vs_else(x_train,y_train,x_test,y_test):
 
     return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'handwritten_vs_else.h5'
 
+def handwritten_vs_no_code(x_train,y_train,x_test,y_test):
+    X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = [],[],[],[]
+    for i in range(len(x_train)):
+        if np.all(y_train[i] == np.array([0,0,1,0])):
+            Y_TRAIN.append([1,0])
+        elif np.all(y_train[i] == np.array([0,0,0,1])):
+            Y_TRAIN.append([0,1])
+        X_TRAIN.append(x_train[i])
+
+    for i in range(len(x_test)):
+        if np.all(y_test[i] == np.array([0,0,1,0])):
+            Y_TEST.append([1,0])
+        elif np.all(y_test[i] == np.array([0,0,0,1])):
+            Y_TEST.append([0,1])
+        X_TEST.append(x_test[i])
+
+    model = VGG((300,300,3),2)
+
+    return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'handwritten_vs_no_code.h5'
+
 def all_four(x_train,y_train,x_test,y_test):
     model = VGG((300,300,3),4)
     return x_train,y_train,x_test,y_test,model,'all_four.h5'

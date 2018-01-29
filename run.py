@@ -71,6 +71,7 @@ if TRAIN:
 		'code_vs_no_code_partially.h5':[],
 		'code_vs_no_code_partially_handwritten.h5':[],
 		'handwritten_vs_else.h5':[],
+		'handwritten_vs_no_code.h5':[],
 		'all_four.h5':[]
 		}
 		all_folds_ds = {
@@ -78,16 +79,18 @@ if TRAIN:
 		'code_vs_no_code_partially.h5':[[0,0],[0,0]],
 		'code_vs_no_code_partially_handwritten.h5':[[0,0],[0,0]],
 		'handwritten_vs_else.h5':[[0,0],[0,0]],
+		'handwritten_vs_no_code.h5':[[0,0],[0,0]],
 		'all_four.h5':[[0,0,0,0],[0,0,0,0]]
 		}
 		for fold in range(5):
-			os.mkdir('Fold_'+str(fold))
+			#os.mkdir('Fold_'+str(fold))
 			# load data
-			X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = load_data(fold=fold,load_new=True)
+			X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = load_data(prefix='Fold_'+str(fold)+'/',load_new=False)
 			print 'Code samples:',np.sum(Y_TRAIN[:,0]),'No C samples:',np.sum(Y_TRAIN[:,1])
 			print 'Train:',len(X_TRAIN),'Test:',len(X_TEST)
 
-			functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
+			#functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
+			functions = [handwritten_vs_no_code]
 			for f in functions:
 				x_train,y_train,x_test,y_test,model,weights = f(X_TRAIN,Y_TRAIN,X_TEST,Y_TEST)
 
