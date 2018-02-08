@@ -22,7 +22,7 @@ The image labeling tool is available [here](http://codeml.mlatlab.org:42224/quiz
   * Blank IDE/text editor
   * IDE/text editor that conains plain text
     * Not code
-    * Comments
+    * Only comments
   * Other programming languages
 
 Please only check one button at a time.
