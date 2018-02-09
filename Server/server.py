@@ -5,6 +5,7 @@ import random
 import sys
 import os
 app = Flask(__name__)
+# http://192.168.0.21:5000/link/https://www.youtube.com/watch?v=D6jqjNbKJJk
 # scp ott109@192.168.200.30:/home/ott109/Video-Code-Tagging/Models/CNN/ae.h5 .
 sys.path.append('../Models/CNN/')
 from model import *
