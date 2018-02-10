@@ -1,4 +1,4 @@
-from load_data import load_data,load_data_leave_one_out
+from load_data import *
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ModelCheckpoint,EarlyStopping,TensorBoard
 from training_options import *
@@ -30,8 +30,8 @@ all_folds_ds = {
 for fold in range(5):
 	os.mkdir('jp_Fold_'+str(fold))
 	# load data
-	X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = save_to_npz('Java.json',target_size=(500,500,3),fold=fold)
-    pX_TRAIN,pY_TRAIN,pX_TEST,pY_TEST = save_to_npz('Python.json',target_size=(500,500,3),fold=fold)
+	X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = save_to_npz('../Data/Java.json',target_size=(500,500,3),fold=fold)
+        pX_TRAIN,pY_TRAIN,pX_TEST,pY_TEST = save_to_npz('../Data/Python.json',target_size=(500,500,3),fold=fold)
 	print 'Code samples:',np.sum(Y_TRAIN[:,0]),'No C samples:',np.sum(Y_TRAIN[:,1])
 	print 'Train:',len(X_TRAIN),'Test:',len(X_TEST)
 

@@ -137,7 +137,7 @@ def load_custom(location):
 
 # updated
 def save_to_npz(json_file,target_size,split=.8,fold=0):
-    DATA_DIR = json_file_path.replace('.json','') + '/'
+    DATA_DIR = json_file.replace('.json','') + '/'
     labels_json = json.load(open(json_file))
     images = []
     labels = []
@@ -167,7 +167,7 @@ def save_to_npz(json_file,target_size,split=.8,fold=0):
                 LOAD = True
         if LOAD:
             complete_location = DATA_DIR+file_location
-            img = np.array(load_img(path,target_size=target_size)).reshape((1,)+target_size)
+            img = np.array(load_img(complete_location,target_size=target_size)).reshape((1,)+target_size)
             images.append(img)
 
     images = np.array(images)
