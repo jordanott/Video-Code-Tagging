@@ -119,16 +119,13 @@ def load_data(split=.8,prefix='',fold=0,load_new=False):
 
     return x_train,y_train,x_test,y_test
 
-def load_custom(location):
+def load_custom(location,target_size=(500,500,3)):
     images = []
     labels = []
     for custom_file in os.listdir(location):
         if custom_file.endswith('.jpg') or custom_file.endswith('.png') or custom_file.endswith('.JPG'):
             complete_location = location+custom_file
-            img = Image.open(complete_location)
-            if img.mode != 'RGB':
-               img = img.convert('RGB')
-            img = np.asarray(img)
+            img = np.array(load_img(complete_location,target_size=target_size))#.reshape((1,)+target_size)
             images.append(img)
 
     images = np.array(images)
