@@ -18,9 +18,9 @@ epochs = 500
 PATIENCE = 30
 
 all_folds_acc = {
-'code_vs_no_code_strict.h5':[],
-'code_vs_no_code_partially.h5':[],
-'code_vs_no_code_partially_handwritten.h5':[]
+'java_python.h5':[],
+'java_python_no_code.h5':[],
+'java_python_pv_no_code.h5':[]
 }
 all_folds_ds = {
 'java_python.h5':[[0,0],[0,0]],
