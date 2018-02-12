@@ -28,12 +28,15 @@ all_folds_ds = {
 'java_python_pv_no_code.h5':[[0,0,0],[0,0,0]]
 }
 for fold in range(5):
-	os.mkdir('jp_Fold_'+str(fold))
+	#os.mkdir('jp_Fold_'+str(fold))
 	# load data
-	X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = save_to_npz('../Data/Java.json',target_size=(500,500,3),fold=fold)
-        pX_TRAIN,pY_TRAIN,pX_TEST,pY_TEST = save_to_npz('../Data/Python.json',target_size=(500,500,3),fold=fold)
-	print 'Code samples:',np.sum(Y_TRAIN[:,0]),'No C samples:',np.sum(Y_TRAIN[:,1])
-	print 'Train:',len(X_TRAIN),'Test:',len(X_TEST)
+	X_TRAIN,Y_TRAIN,X_TEST,Y_TEST = load_from_npz('jp_Fold_{k}/Java.npz'.format(k=fold))
+        X_TRAIN,X_TEST = np.squeeze(X_TRAIN),np.squeeze(X_TEST)
+        pX_TRAIN,pY_TRAIN,pX_TEST,pY_TEST = load_from_npz('jp_Fold_{k}/Python.npz'.format(k=fold))
+        pX_TRAIN,pX_TEST = np.squeeze(pX_TRAIN),np.squeeze(pX_TEST)
+
+	print 'Java train:',X_TRAIN.shape
+        print 'Python train:',pX_TRAIN.shape
 
 	functions = [java_python,java_python_no_code,java_python_pv_no_code]
 	for f in functions:

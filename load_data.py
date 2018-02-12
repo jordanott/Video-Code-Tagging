@@ -137,8 +137,14 @@ def load_custom(location):
 
 # updated
 def save_to_npz(json_file,target_size,split=.8,fold=0):
-    DATA_DIR = json_file.replace('.json','') + '/'
-    labels_json = json.load(open(json_file))
+    if 'Python' in json_file:
+        DATA_DIR = '../Data'
+        labels_json = json.load(open('../Data/Python.json'))
+        file_name = 'Python'
+    else:
+        DATA_DIR = json_file.replace('.json','') + '/'
+        labels_json = json.load(open(json_file))
+        file_name = 'Java'
     images = []
     labels = []
     for i in range(len(labels_json)):
@@ -185,7 +191,7 @@ def save_to_npz(json_file,target_size,split=.8,fold=0):
                 np.delete(y_test,j,0)
                 count += 1
     print 'Deleted:',count
-    np.savez('jp_Fold_'+str(fold)+'/data',x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test)
+    np.savez('tmp_jp_Fold_'+str(fold)+'/'+file_name,x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test)
     return x_train,y_train,x_test,y_test
 
 def load_from_npz(file_name):

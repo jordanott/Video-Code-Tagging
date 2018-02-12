@@ -32,7 +32,7 @@ def java_python(x_train,y_train,x_test,y_test,px_train,py_train,px_test,py_test)
             Y_TEST.append([0,1])
             X_TEST.append(px_test[i])
 
-    model = VGG((300,300,3),2)
+    model = VGG((500,500,3),2)
     return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'java_python.h5'
 
 def java_python_no_code(x_train,y_train,x_test,y_test,px_train,py_train,px_test,py_test):
@@ -71,7 +71,7 @@ def java_python_no_code(x_train,y_train,x_test,y_test,px_train,py_train,px_test,
             Y_TEST.append([0,0,1])
             X_TEST.append(px_test[i])
 
-    model = VGG((300,300,3),3)
+    model = VGG((500,500,3),3)
     return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'java_python_no_code.h5'
 
 def java_python_pv_no_code(x_train,y_train,x_test,y_test,px_train,py_train,px_test,py_test):
@@ -122,7 +122,7 @@ def java_python_pv_no_code(x_train,y_train,x_test,y_test,px_train,py_train,px_te
             Y_TEST.append([0,0,1])
             X_TEST.append(px_test[i])
 
-    model = VGG((300,300,3),3)
+    model = VGG((500,500,3),3)
     return np.array(X_TRAIN),np.array(Y_TRAIN),np.array(X_TEST),np.array(Y_TEST),model,'java_python_pv_no_code.h5'
 
 def code_vs_no_code_strict(x_train,y_train,x_test,y_test):
