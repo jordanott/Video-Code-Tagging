@@ -1,10 +1,13 @@
 # Video Code Tagging
 
-We are interested in creating a deep learning model capable of tagging video frames that contain coding sections, specifically in programming tutorials. We are interested in frames that contain the Java programming language.
+This repository contains work for two projects. The first is interested in identifying the presence of Java code in software engineering video tutorials. The second is interested in predicting Java versus Python code in image frames.
 
   ⇒ See [Labeling Standards](DataCollection/LABELING.md) for info on how we label data    
   ⇒ See [DataCollection](DataCollection/) for how we aquire data  
   ⇒ See [Models](Models/) for the networks we use to label images   
+  ⇒ See [Results](Results/) for results on identifying Java code in videos
+  ⇒ See [Java Python Results](jp_Results/) for results of discriminating between Java and Python code in videos
+  ⇒ See [Server](Server/) how our tagging tool works on the backend
 
 ### Steps ###
 1. Acquire links of videos  
