@@ -10,8 +10,8 @@ Code & Partially Visible Code vs No code | C: 8015, NC: 7030 | C: 2,003, NC: 1,7
 Any type of code vs No code | C: 8,330, NC: 7,030 | C: 2,079, NC: 1,761
 Only visible code vs No code | C: 6,906, NC: 7,030 | C: 1,734, NC: 1,761
 
- | Mean Accuracy | Median Accuracy
-:-------------------------:|:-------------------------:|:-------------------------:
+Table                      |         Mean Accuracy     |      Median Accuracy
+:-------------------------:|:-------------------------:|:-------------------------:  
 Only visible code vs No code | 92.917 | 92.725
 Any type of code vs No code | 90.518 | 90.499
 Code & Partially Visible Code vs No code | 90.323 | 90.182
@@ -27,4 +27,4 @@ Test Image                 |  CAM Result
 ![](Images/java1.png)  |  ![](Images/java1_cam.png)
 ![](Images/java2.JPG)  |  ![](Images/java2_cam.png)
 ![](Images/java3.jpg)  |  ![](Images/java3_cam.png)
-![](Images/java4.png)  |  ![](Images/java4_cam.png)
+![](Images/java4.jpg)  |  ![](Images/java4_cam.png)
