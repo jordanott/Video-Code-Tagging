@@ -5,9 +5,9 @@ This repository contains work for two projects. The first is interested in ident
   ⇒ See [Labeling Standards](DataCollection/LABELING.md) for info on how we label data    
   ⇒ See [DataCollection](DataCollection/) for how we aquire data  
   ⇒ See [Models](Models/) for the networks we use to label images   
-  ⇒ See [Results](Results/) for results on identifying Java code in videos
-  ⇒ See [Java Python Results](jp_Results/) for results of discriminating between Java and Python code in videos
-  ⇒ See [Server](Server/) how our tagging tool works on the backend
+  ⇒ See [Results](Results/) for results on identifying Java code in videos  
+  ⇒ See [Java Python Results](jp_Results/) for results of discriminating between Java and Python code in videos  
+  ⇒ See [Server](Server/) how our tagging tool works on the backend  
 
 ### Steps ###
 1. Acquire links of videos  
