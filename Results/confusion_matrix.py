@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import sys
 import numpy as np
 sys.path.append('../Models/CNN/')
@@ -13,7 +15,7 @@ from sklearn.metrics import precision_score, recall_score
 two = ['Code','No Code']
 four = ['VC','PVC','HC','NC']
 # training option functions
-functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,all_four]
+functions = [code_vs_no_code_strict,code_vs_no_code_partially,code_vs_no_code_partially_handwritten,handwritten_vs_else,handwritten_vs_no_code,all_four]
 results = {'code_vs_no_code_strict.h5':{'actual':np.array([]),'predicted':np.array([])},
             'code_vs_no_code_partially.h5':{'actual':np.array([]),'predicted':np.array([])},
             'code_vs_no_code_partially_handwritten.h5':{'actual':np.array([]),'predicted':np.array([])},
@@ -52,7 +54,7 @@ def plot_confusion_matrix(cm, classes,normalize=False,title='Confusion matrix',c
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-
+'''
 for f in functions:
     print 'new function'
     for fold in range(0,5):
@@ -136,4 +138,4 @@ for key in results.keys():
                       title='Confusion Matrix: 5 Fold Cross Validation')
 
     plt.savefig(key.replace('h5','png'))
-'''
+
