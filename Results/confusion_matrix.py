@@ -8,6 +8,7 @@ from load_data import load_custom
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import itertools
+from sklearn.metrics import precision_score, recall_score
 # class options
 two = ['Code','No Code']
 four = ['VC','PVC','HC','NC']
@@ -17,6 +18,7 @@ results = {'code_vs_no_code_strict.h5':{'actual':np.array([]),'predicted':np.arr
             'code_vs_no_code_partially.h5':{'actual':np.array([]),'predicted':np.array([])},
             'code_vs_no_code_partially_handwritten.h5':{'actual':np.array([]),'predicted':np.array([])},
             'handwritten_vs_else.h5':{'actual':np.array([]),'predicted':np.array([])},
+            'handwritten_vs_no_code.h5':{'actual':np.array([]),'predicted':np.array([])},
             'all_four.h5':{'actual':np.array([]),'predicted':np.array([])}
             }
 
@@ -50,7 +52,7 @@ def plot_confusion_matrix(cm, classes,normalize=False,title='Confusion matrix',c
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-'''
+
 for f in functions:
     print 'new function'
     for fold in range(0,5):
@@ -76,12 +78,14 @@ np.savez('actual',code_vs_no_code_strict=results['code_vs_no_code_strict.h5']['a
     code_vs_no_code_partially=results['code_vs_no_code_partially.h5']['actual'],
     code_vs_no_code_partially_handwritten=results['code_vs_no_code_partially_handwritten.h5']['actual'],
     handwritten_vs_else=results['handwritten_vs_else.h5']['actual'],
+    handwritten_vs_no_code=results['handwritten_vs_no_code.h5']['actual'],
     all_four=results['all_four.h5']['actual'])
 
 np.savez('predicted',code_vs_no_code_strict=results['code_vs_no_code_strict.h5']['predicted'],
     code_vs_no_code_partially=results['code_vs_no_code_partially.h5']['predicted'],
     code_vs_no_code_partially_handwritten=results['code_vs_no_code_partially_handwritten.h5']['predicted'],
     handwritten_vs_else=results['handwritten_vs_else.h5']['predicted'],
+    handwritten_vs_no_code=results['handwritten_vs_no_code.h5']['predicted'],
     all_four=results['all_four.h5']['predicted'])
 '''
 actual = np.load('actual.npz')
@@ -89,21 +93,40 @@ results['code_vs_no_code_strict.h5']['actual'] = actual['code_vs_no_code_strict'
 results['code_vs_no_code_partially.h5']['actual'] = actual['code_vs_no_code_partially']
 results['code_vs_no_code_partially_handwritten.h5']['actual'] = actual['code_vs_no_code_partially_handwritten']
 results['handwritten_vs_else.h5']['actual'] = actual['handwritten_vs_else']
+results['handwritten_vs_no_code.h5']['actual'] = actual['handwritten_vs_no_code']
 results['all_four.h5']['actual'] = actual['all_four']
+
 predicted = np.load('predicted.npz')
 results['code_vs_no_code_strict.h5']['predicted'] = predicted['code_vs_no_code_strict']
 results['code_vs_no_code_partially.h5']['predicted'] = predicted['code_vs_no_code_partially']
 results['code_vs_no_code_partially_handwritten.h5']['predicted'] = predicted['code_vs_no_code_partially_handwritten']
 results['handwritten_vs_else.h5']['predicted'] = predicted['handwritten_vs_else']
+results['handwritten_vs_no_code.h5']['predicted'] = predicted['handwritten_vs_no_code']
 results['all_four.h5']['predicted'] = predicted['all_four']
 
+y=np.zeros(1000)
+y[985:] = 1
+p=np.zeros(1000)
+p[-1] = 1
+p[0] = 1
+ps = precision_score(y, p)
+rs = recall_score(y, p)
+print ps,rs
 for key in results.keys():
     y_test = results[key]['actual']
     y_pred = results[key]['predicted']
     cnf_matrix = confusion_matrix(y_test, y_pred)
+
+    average = 'binary'
+    if 'all_four' in key:
+        average = 'weighted'
+    ps = precision_score(y_test, y_pred,average=average)
+    rs = recall_score(y_test, y_pred,average=average)
+
     cnf_matrix /= 5
     plt.figure()
 
+    print key, '{0:.3f}'.format(ps),'&','{0:.3f}'.format(rs)
     if key == 'all_four.h5':
         plot_confusion_matrix(cnf_matrix, classes=four,
                       title='Confusion Matrix: 5 Fold Cross Validation')
@@ -113,3 +136,4 @@ for key in results.keys():
                       title='Confusion Matrix: 5 Fold Cross Validation')
 
     plt.savefig(key.replace('h5','png'))
+'''
